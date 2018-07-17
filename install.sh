@@ -20,13 +20,13 @@ GITHUB_USERNAME=""
 main()  {
   header
 
-  read -p "Appuyer sur une touche pour continuer... " -n1 -s
+  read -p "Appuyer sur une touche pour continuer... " -n1 -s </dev/tty
   echo
   echo
 
-  read -p "Votre nom complet: " NAME
-  read -p "Votre email: " EMAIL
-  read -p "Votre ID Github: " GITHUB_USERNAME
+  read -p "Votre nom complet: " NAME </dev/tty
+  read -p "Votre email: " EMAIL </dev/tty
+  read -p "Votre ID Github: " GITHUB_USERNAME </dev/tty
   if [ -z "$NAME" ] || [ -z "$EMAIL" ] || [ -z "$GITHUB_USERNAME" ]; then
       echo
       echo -e "☠️ ☠️  Please enter name & email: aborting ☠️ ☠️ " 
