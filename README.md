@@ -1,4 +1,4 @@
-# This is the repository containing files to setup new Macs @ imagine-app
+# setup-iapp script v0.1.0
 
 This repository contains a set of config files and an `install.sh` setup script.
 
