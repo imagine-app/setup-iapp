@@ -9,9 +9,20 @@ set -e
 set -u
 
 CONTENT_URL="https://raw.githubusercontent.com/imagine-app/setup-iapp/master"
+# Files to copy locally
 REMOTE_FILES=(Brewfile .bashrc .gitconfig .profile .bundle.config)
-GEMS=(sass rails nokogiri)
-NODE_MODULES=(create-react-app create-react-native-app typescript react-scripts-ts express)
+# Ruby version to install (using rbenv)
+RUBY_VERSION="2.6.0"
+# Libraries for developers
+GEMS=(rails nokogiri)
+NODE_MODULES=(create-react-app react-native typescript react-scripts-ts express)
+PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
+GO_PACKAGES=(
+  "golang.org/x/tools/cmd/goimports" 
+  "github.com/sourcegraph/go-langserver"
+  "github.com/mdempsky/gocode"
+)
+
 
 NAME=""
 EMAIL=""
@@ -37,11 +48,12 @@ main()  {
   trap "echo; echo -e '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
 
   copy_files
-  reload_env
 
   install_brew_files
   install_node_modules
   install_ruby_gems
+  install_python_eggs
+  install_go_modules
 
   trap - EXIT
 }
@@ -90,13 +102,6 @@ copy_files() {
   done
 }
 
-reload_env() {
-  echo -e "\\033[32mReloading\\033[0m bash config..."
-  set +u
-  source "$HOME/.bashrc" # re-load the config !
-  set -u
-}
-
 install_brew_files() {
   echo -e "\\033[32mInstalling\\033[0m Homebrew itself..."
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -120,8 +125,39 @@ install_node_modules() {
 }
 
 install_ruby_gems() {
+  echo -e "\\033[32mInstalling\\033[0m latest ruby using rbenv..."
+  rbenv install "$RUBY_VERSION" --skip-existing 
+  rbenv local "$RUBY_VERSION"
+  echo "$RUBY_VERSION" > "$HOME/.ruby-version"
+
   echo -e "\\033[32mInstalling\\033[0m Ruby gems..."
   gem install "${GEMS[@]}" --no-ri --no-rdoc
+}
+
+install_python_eggs() {
+  local python2_site_path=$(python2 -m site --user-site)
+  local python2_version=$(python2 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
+  local python3_site_path=$(python3 -m site --user-site)
+  local python3_version=$(python3 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
+
+  echo -e "\\033[32mInstalling\\033[0m Latest pip..."
+  "easy_install-${python2_version}" pip
+  "easy_install-${python3_version}" pip
+
+  echo -e "\\033[32mInstalling\\033[0m Python eggs..."
+  pip install -U "${PYTHON_PIPS[@]}" 
+  pip3 install -U "${PYTHON_PIPS[@]}" 
+}
+
+install_go_modules() {
+  echo -e "\\033[32mInstalling\\033[0m GCP components for go..."
+  gcloud components update --quiet
+  gcloud components install app-engine-go --quiet
+  
+  echo -e "\\033[32mInstalling\\033[0m go packages & tools..."
+  for pkg in ${go_packages[@]}; do
+    go get "$pkg"
+  done
 }
 
 main

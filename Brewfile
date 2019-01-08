@@ -2,95 +2,58 @@
 # inspired by my own Brewfile: https://github.com/ushu/dotfiles/blob/master/Brewfile
 
 # Update common Unix tools
+brew "bash"
 brew "git"
 brew "git-lfs"
-brew "wget"
-brew "curl"
-brew "gawk"
-brew "gnu-sed"
-brew "ffmpeg"
 brew "mutt"
-brew "graphviz"
+brew "curl"
+brew "wget"
 
-# Documentation
-brew "pandoc"
-brew "asciidoc"
-brew "asciidoctor"
+# Python
+brew "python3", args: [ "build-from-source" ]
+brew "python@2", args: [ "build-from-source" ]
 
 # Development tools
 brew "pkg-config"
 brew "vim", args: ["with-python", "with-lua", "with-python3"]
-brew "neovim", args: ["HEAD"]
-brew "emacs", args: ["with-cocoa", "with-gnutls"]
-brew "phantomjs"
 brew "imagemagick"
-brew "flow"
-brew "editorconfig"
-brew "heroku"
-brew "carthage"
+brew "ffmpeg"
 brew "watchman"
+tap "heroku/brew"
+brew "heroku/brew/heroku"
+tap "sass/sass"
+brew "sass/sass/sass"
 
 # DB & Cache servers
-brew "postgresql"
-brew "mongodb"
-brew "mysql", restart_service: true, conflicts_with: ["homebrew/versions/mysql56"]
-brew "redis"
-brew "memcached"
-brew "sqlite"
+brew "postgresql", restart_service: :changed
+brew "redis", restart_service: :changed
+brew "memcached", restart_service: :changed
 
 # Common libraries
 brew "libyaml"
-brew "libxml2", args:[ ":with-python" ]
-brew "libxslt"
-brew "libksba"
-brew "openssl"
-brew "imagemagick"
-brew "lapack"
-brew "scalapack"
+brew "libxml2", args: [ "with-python" ]
 
 # Better tooling
-brew "bash"
 brew "bash-git-prompt"
-brew "grok"
 brew "ag"
 brew "fzf"
-brew "fzy"
 
 # Ruby
-brew "ruby"
 brew "rbenv"
-
-# Python
-brew "python"
-brew "python3"
-brew "pyenv-virtualenv"
-brew "pyenv-virtualenvwrapper"
 
 # Node & Javascript
 brew "nvm"
-brew "nodejs"
-brew "jsonlint"
 brew "yarn"
-
-# Elixir
-brew "elixir"
-
-# Rust
-brew "rustup"
+brew "flow"
 
 # Go
 brew "go"
+brew "dep"
 
-# Elm
-brew "elm"
-brew "elm-format"
-
-# C/C++
-# installs clang-tidy into "$(brew --prefix llvm)/bin/clang-tidy":
-brew "llvm", args: ["with-clang", "with-clang-extra-tools"]
-brew "clang-format"
-brew "cmake", args: ["with-completion"]
-brew "gcc", args: ["with-git", "with-nls"]
+# Additional dev tools
+brew "cmake", args: [ "with-completion" ]
+brew "carthage"
+brew "letsencrypt"
 
 ###################################
 # Install GUI apps with Brew Cask #
@@ -102,36 +65,26 @@ tap "caskroom/cask"
 # Browsers
 cask "google-chrome"
 cask "firefox"
-cask "opera"
 
 # Java
-cask "java" unless system "/usr/libexec/java_home --failfast"
+cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
+
+# Java
+cask "googleappengine"
 
 # Dev Tools
-cask "atom"
+brew "antlr" # <- needs java !
 cask "visual-studio-code"
-cask "gitbook-editor"
-brew "antlr" # <- needs JAVA, so I put it down here...
+cask "google-cloud-sdk"
+# Android
 cask "android-studio"
 cask "android-sdk"
-cask "android-ndk"
 
 # Misc
-cask "gpg-suite"
-cask "dropbox"
-cask "steam"
 cask "launchrocket"
-cask "vlc"
-#cask "MacTex" # tooooo big...
+#cask "vlc"
+cask "omnidisksweeper"
 
-###################################
-# Install App Store apps with mas #
-###################################
-
-brew "mas"
-
-# Fonts
-tap "caskroom/fonts"
-cask "font-inconsolata"
-cask "font-fira-code"
+# JetBrains IDEs
+cask "jetbrains-toolbox"
 
