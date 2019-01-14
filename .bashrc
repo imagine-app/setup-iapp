@@ -39,6 +39,11 @@ alias l="git lg"
 alias ac="git add -all && git commit"
 alias be="bundle exec"
 
+# Version managers
+export NVM_DIR=~/.nvm
+[ -e "$BREW_PREFIX/opt/nvm/nvm.sh" ] && source "$BREW_PREFIX/opt/nvm/nvm.sh"
+[ -e "$BREW_PREFIX/bin/rbenv" ] && eval "$($BREW_PREFIX/bin/rbenv init -)"
+
 # Cool prompt (with git support !)
 [ -e "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh" ] && \
 	source "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh"
